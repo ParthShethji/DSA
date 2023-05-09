@@ -1,0 +1,68 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <climits>
+
+using namespace std;
+
+const int INF = INT_MAX; // maximum value for int
+
+// returns the index of the vertex with minimum key value
+int minKey(vector<int>& key, vector<bool>& mstSet) {
+    int min_val = INF, min_index;
+    for (int v = 0; v < key.size(); ++v) {
+        if (!mstSet[v] && key[v] < min_val) {
+            min_val = key[v];
+            min_index = v;
+        }
+    }
+    return min_index;
+}
+
+// prints the edges of the MST and its total weight
+void printMST(vector<int>& parent, vector<vector<int>>& graph) {
+    int total_weight = 0;
+    for (int v = 1; v < graph.size(); ++v) {
+        cout << parent[v] << " - " << v << " : " << graph[v][parent[v]] << "\n";
+        total_weight += graph[v][parent[v]];
+    }
+    cout << "Total weight: " << total_weight << "\n";
+}
+
+// constructs and returns the MST of the given graph
+void primMST(vector<vector<int>>& graph) {
+    int V = graph.size(); // number of vertices in the graph
+    vector<int> parent(V); // stores the parent of each vertex in the MST
+    vector<int> key(V, INF); // stores the minimum key value for each vertex
+    vector<bool> mstSet(V, false); // indicates if a vertex is already included in the MST
+    key[0] = 0; // start with the first vertex
+
+    // construct the MST with V-1 edges
+    for (int count = 0; count < V-1; ++count) {
+        int u = minKey(key, mstSet); // select the vertex with the minimum key value
+        mstSet[u] = true; // add it to the MST
+
+        // update the key values of adjacent vertices if they are not already in the MST
+        for (int v = 0; v < V; ++v) {
+            if (graph[u][v] && !mstSet[v] && graph[u][v] < key[v]) {
+                parent[v] = u;
+                key[v] = graph[u][v];
+            }
+        }
+    }
+
+    printMST(parent, graph); // print the MST
+}
+
+int main() {
+    // create the graph as an adjacency matrix
+    vector<vector<int>> graph = {{0, 2, 0, 6, 0},
+                                 {2, 0, 3, 8, 5},
+                                 {0, 3, 0, 0, 7},
+                                 {6, 8, 0, 0, 9},
+                                 {0, 5, 7, 9, 0}};
+
+    primMST(graph); // find the MST of the graph
+
+    return 0;
+}

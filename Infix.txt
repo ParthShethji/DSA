@@ -1,0 +1,84 @@
+#include <string>
+#include <stack>
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+bool isOperator(char c)
+{
+    return (c == '+' || c == '-' || c == '*' || c == '/');
+}
+
+std::string postfixToInfix(std::string postfix)
+{
+    std::stack<std::string> s;
+    for (char c : postfix)
+    {
+        if (isOperator(c))
+        {
+            std::string op1 = s.top();
+            s.pop();
+            std::string op2 = s.top();
+            s.pop();
+            std::string tmp = "(" + op2 + c + op1 + ")";
+            s.push(tmp);
+        }
+        else
+        {
+            std::string tmp(1, c);
+            s.push(tmp);
+        }
+    }
+    return s.top();
+}
+
+std::string prefixToInfix(std::string pre)
+{
+    std::reverse(pre.begin(), pre.end());
+    std::stack<std::string> s;
+    for (char c : pre)
+    {
+        if (isOperator(c))
+        {
+            std::string op1 = s.top();
+            s.pop();
+            std::string op2 = s.top();
+            s.pop();
+            std::string tmp = "(" + op2 + c + op1 + ")";
+            s.push(tmp);
+        }
+        else
+        {
+            std::string tmp(1, c);
+            s.push(tmp);
+        }
+    }
+    std::string tmp = s.top();
+    std::reverse(tmp.begin(), tmp.end());
+    for (int i = 0; i < tmp.length(); i++)
+    {
+        if (tmp[i] == ')')
+        {
+            tmp[i] = '(';
+        }
+        else if (tmp[i] == '(')
+        {
+            tmp[i] = ')';
+        }
+    }
+    return tmp;
+}
+int main()
+{
+    std::string post;
+    // std::cout << "Enter an postfix expression: ";
+    // std::getline(std::cin, post);
+    post = "abc*de*f/++";
+    std::string pre;
+    pre = "+a+*bc*d/ef";
+    std::string in = prefixToInfix(pre);
+
+    std::cout << in << std::endl;
+    return 0;
+}

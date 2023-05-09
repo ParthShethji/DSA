@@ -1,0 +1,189 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define n 3
+
+int q[n];
+int front = -1;
+int rear = -1;
+
+bool isempty()
+{
+    if (rear == -1)
+    {
+        return true;
+    }
+    return false;
+}
+
+bool isfull()
+{
+    if (rear + 1 == front || (rear == n - 1 && front == 0))
+    {
+        return true;
+    }
+    return false;
+}
+void Enqueue(int q[], int e)
+{
+    if (isfull())
+    {
+        cout << "queue is full!" << endl;
+        return;
+    }
+    if (front == -1)
+    {
+        front++;
+    }
+    rear = (rear + 1) % n;
+    q[rear] = e;
+    return;
+}
+void Dequeue(int q[])
+{
+    if (isempty())
+    {
+        cout << "queue is already empty!!" << endl;
+        return;
+    }
+    if (front == rear)
+    {
+        front = rear = -1;
+    }
+    else
+    {
+        front++;
+    }
+}
+void Display(int q[])
+{
+    if (isempty())
+    {
+        cout << "Queue is empty!" << endl;
+        return;
+    }
+    int temp = front;
+    while (temp != rear)
+    {
+        cout << q[temp] << " ";
+        temp = (temp + 1) % n;
+    }
+    cout << q[temp] << endl;
+}
+int first(int q[])
+{
+    if (isempty())
+    {
+        return -1;
+    }
+    return q[front];
+}
+
+void reverseQueueUsingStack(int q[])
+{
+    stack<int> st;
+    while (!isempty())
+    {
+        st.push(first(q));
+        Dequeue(q);
+    }
+    while (!st.empty())
+    {
+        Enqueue(q, st.top());
+        st.pop();
+    }
+}
+
+void reverseStackUsingQueue(stack<int> &st)
+{
+    // making queue empty()
+    front = rear = -1;
+    while (!st.empty())
+    {
+        Enqueue(q, st.top());
+        st.pop();
+    }
+    while (!isempty())
+    {
+        st.push(first(q));
+        Dequeue(q);
+    }
+}
+int main()
+{
+    int ch;
+    do
+    {
+        cout << "1. Circular Queue\n2. Reverse stack using queue\n3. Exit" << endl;
+        cout << "Enter your choice : ";
+        cin >> ch;
+        switch (ch)
+        {
+        case 1:
+            int ch1;
+            do
+            {
+                cout << "1. Enqueue\n2. Dequeue\n3. Display\n4. Back\n";
+                cout << "Enter operation : ";
+                cin >> ch1;
+                switch (ch1)
+                {
+                case 1:
+                {
+                    cout << "Enter element to enter :" << endl;
+                    int e;
+                    cin >> e;
+                    Enqueue(q, e);
+                    break;
+                }
+
+                case 2:
+                {
+                    Dequeue(q);
+                    break;
+                }
+                case 3:
+                {
+                    Display(q);
+                    break;
+                }
+                case 4:
+                    break;
+                }
+            } while (ch1 != 4);
+            break;
+        case 2:
+        {
+            stack<int> st;
+            int temp;
+            cout << "Enter size of stack : ";
+            cin >> temp;
+            cout << "Enter stack elements" << endl;
+            for (int i = 0; i < temp; i++)
+            {
+                int e;
+                cin >> e;
+                st.push(e);
+            }
+            cout << "Stack before reversing : ";
+            stack<int> t = st;
+            while (!t.empty())
+            {
+                cout << t.top() << " ";
+                t.pop();
+            }
+            cout << endl;
+            reverseStackUsingQueue(st);
+            cout << "Stack after reversing : ";
+            while (!st.empty())
+            {
+                cout << st.top() << " ";
+                st.pop();
+            }
+            cout << endl;
+        }
+        case 3:
+            break;
+        }
+    } while (ch != 3);
+    return 0;
+}
