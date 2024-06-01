@@ -1,0 +1,140 @@
+#include <iostream>
+using namespace std;
+
+class Tree{
+    public:
+    int data;
+    Tree* left;
+    Tree* right;
+    Tree(int data){
+        this->data=data;
+        left=right=NULL;
+    };
+};
+
+Tree* newNode(int item){
+    Tree *node = new Tree(item);
+    return node;
+}
+
+void inorder_traversal(Tree* root){
+        if(root == NULL){
+            return;
+        }
+        inorder_traversal(root->left);
+        cout << root->data << "->";
+        inorder_traversal(root->right);
+}
+
+Tree* insertNode(Tree* node, int data){
+    if(node==NULL){
+        return newNode(data);
+    }
+    if(data<node->data){
+        node->left=insertNode(node->left,data);
+    }
+    else{
+        node->right=insertNode(node->right,data);
+    }
+    return node;
+}
+
+Tree* inorderSuccessor(Tree* node){
+    Tree* current=node;
+    while(current && current->left != NULL){
+        current=current->left;
+    }
+    return current;
+}
+
+Tree* deleteNode(Tree* root,int data){
+    if(root == NULL){
+        return root;
+    }
+    if(data<root->data){
+        root->left=deleteNode(root->left,data);
+    }
+    else if(data>root->data){
+        root->right=deleteNode(root->right,data);   
+    }
+    else {
+        if (root->left == NULL) {
+        Tree *temp = root->right;
+        free(root);
+        return temp;
+        } 
+        else if (root->right == NULL) {
+        Tree *temp = root->left;
+        free(root);
+        return temp;
+        }
+        Tree* temp = inorderSuccessor(root->right);
+        root->data = temp->data;
+        root->right = deleteNode(root->right, temp->data);
+    }
+    return root;
+}
+
+int height(Tree* root){
+	if (root == NULL)
+        return 0;
+	else{
+		int height_left = height(root->left);
+        int height_right = height(root->right);
+		if (height_left > height_right)
+            return (height_left + 1);
+        else
+            return (height_right + 1);
+	}
+}
+
+int Count(Tree* root)
+{
+    if (root == NULL)
+        return 0;
+ 
+    int left = Count(root->left);
+    int right = Count(root->right);
+ 
+    return 1 + left+ right;
+}
+
+void Mirror(Tree* root){
+	if (root == NULL) {
+                return;
+            } else {
+                Mirror(root->left);
+                Mirror(root->right);
+                Tree* temp = root->left;
+                root->left = root->right;
+                root->right = temp;
+            }
+}
+
+int main() {
+  Tree *root = NULL;
+  root = insertNode(root, 8);
+  root = insertNode(root, 3);
+  root = insertNode(root, 1);
+  root = insertNode(root, 6);
+  root = insertNode(root, 7);
+  root = insertNode(root, 10);
+  root = insertNode(root, 14);
+  root = insertNode(root, 4);
+
+  cout << "Inorder traversal: ";
+  inorder_traversal(root);
+
+  cout << "\nAfter deleting 7\n";
+  root = deleteNode(root, 7);
+
+  cout << "\nInorder traversal: \n";
+  inorder_traversal(root);
+
+  cout << "\nHeight: \n"<<height(root);
+  cout << "\nCount: \n"<<Count(root);
+  
+  Mirror(root);
+  cout << "\nMirror: \n";
+  inorder_traversal(root);
+}

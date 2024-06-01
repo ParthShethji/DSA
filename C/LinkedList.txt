@@ -1,0 +1,174 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+class Node {
+  public:
+    int data;
+    Node* next;
+};
+
+Node* head = NULL; 
+Node* tail = NULL; 
+
+void addFirst(int value) {
+    Node* new_node = new Node;
+    new_node->data = value;
+    new_node->next = head;
+    head = new_node;
+    if (tail == NULL) {
+    	tail = new_node;
+    }
+    cout << value << " added to the beginning" << endl;
+}
+
+void addLast(int value) {
+    Node* new_node = new Node;
+    new_node->data = value;
+    new_node->next = NULL;
+    if (tail == NULL) {
+		head = new_node;
+		tail = new_node;
+    } else {
+		tail->next = new_node;
+		tail = new_node;
+    }
+    cout << value << " added to the end" << endl;
+}
+
+void addAfter(int key, int value) {
+    Node* current = head;
+    while (current != NULL) {
+    if (current->data == key) {
+        Node* new_node = new Node;
+        new_node->data = value;
+        new_node->next = current->next;
+        current->next = new_node;
+        if (current == tail) {
+        	tail = new_node;
+        }
+        cout << value << " added after " << key << endl;
+        return;
+    }
+    current = current->next;
+    }
+    cout << key << " not found in the linked list" << endl;
+}
+
+void deleteFirst() {
+    if (head == NULL) {
+    	cout << "The linked list is empty" << endl;
+    	return;
+    }
+    Node* temp = head;
+    head = head->next;
+    if (head == NULL) {
+    	tail = NULL;
+    }
+    cout << temp->data << " deleted from the beginning" << endl;
+    delete temp;
+}
+
+void deleteLast() {
+    if (tail == NULL) {
+		cout << "The linked list is empty" << endl;
+		return;
+    }
+    if (head == tail) {
+		delete head;
+		head = NULL;
+		tail = NULL;
+		cout << "Last element deleted" << endl;
+		return;
+    }
+    Node* current = head;
+    while (current->next != tail) {
+		current = current->next;
+    }
+    tail = current;
+    tail->next = NULL;
+    cout << "Last element deleted" << endl;
+}
+
+void deleteKey(int key) {
+    if (head == NULL) {
+        cout << "The linked list is empty" << endl;
+        return;
+    }
+    if (head->data == key) {
+        Node* temp = head;
+        head = head->next;
+        if (head == NULL) {
+            tail = NULL;
+        }
+        cout << temp->data << " deleted" << endl;
+        return;
+    }
+    Node* current = head;
+    while (current->next != NULL) {
+        if (current->next->data == key) {
+            Node* temp = current->next;
+            current->next = current->next->next;
+            if (current->next == NULL) {
+                tail = current;
+            }
+            cout << temp->data << " deleted" << endl;
+            return;
+        }
+        current = current->next;
+    }
+    cout << key << " not found in the linked list" << endl;
+}
+
+
+void display() {
+	if (head == NULL) {
+		cout << "The linked list is empty" << endl;
+		return;
+	}
+	Node* current = head;
+	while (current != NULL) {
+		cout << current->data << " ";
+		current = current->next;
+	}
+	cout << endl;
+}
+
+
+int main(){
+	int x=0; 
+	cout<<"1. Add First \n2. Add Last \n3. Add After \n4. Delete First \n5. Delete Last \n6. Delete A Node \n7. Display \n8. Exit"<<endl; 
+	while(x<=7){
+		int i=0,j=0; 
+		cout<<"Select operation: "<<endl;
+		cin>>x; 
+		switch(x){
+			case 1: 
+				cout<<"Enter data: "; cin>>i; 
+				addFirst(i); 
+				break; 
+			case 2: 
+				cout<<"Enter data: "; cin>>i; 
+				addLast(i); 
+				break; 
+			case 3: 
+				cout<<"Enter key: "; cin>>i; 
+				cout<<"Enter data: "; cin>>j; 
+				addAfter(i,j); 
+				break;
+			case 4: 
+				deleteFirst(); 
+				break;
+			case 5: 
+				deleteLast(); 
+				break; 
+			case 6: 
+				cout<<"Enter key: "; cin>>i; 
+				deleteKey(i); 
+				break; 
+			case 7: 
+				display(); 
+				break; 
+		} 
+	} 
+	return 0; 
+}

@@ -1,0 +1,42 @@
+#include<iostream>
+#include<array>
+using namespace std;
+
+void quicksort(int arr[], int low, int high){
+    if(low>high){
+        return;
+    }
+    int s=low;
+    int e=high;
+    int mid = s+(e-s)/2;
+    int pivot = arr[mid];
+    while(arr[s]<pivot){
+        s++;
+    }
+    while(arr[e]>pivot){
+        e--;
+    }
+    if(s<=e){
+        int temp = arr[s];
+        arr[s] = arr[e];
+        arr[e]= temp;
+        s++;
+        e--;
+    }
+
+
+    quicksort(arr, low, e);
+    quicksort(arr, s, high);
+
+}
+
+
+int main(){
+    int arr[] = {14, 9, 7, 5, 2, -2};
+    int n = 6;
+    quicksort(arr, 0, n-1);
+    for(int i=0; i<n; i++){
+        cout<<arr[i]<<" ";
+    }
+    return 0;
+}
